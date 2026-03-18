@@ -41,7 +41,7 @@ def getTable_AlteracoesEstatutos(ano,cursor):
 		else:
 			ambGeo = linha["ambitoGeografico"]
 		if "servico" not in linha:
-                        servico = ""
+			servico = ""
 		else:
 			servico = linha["servico"]
 		
@@ -276,8 +276,8 @@ def municipios_codigosPostais(cursor):
 	f.readline()
 	to_db = []
 	for line in f:
-  		values = line.split(";")
-  		to_db.append((values[0],values[1],values[2]))
+		values = line.split(";")
+		to_db.append((values[0],values[1],values[2]))
 
 	f.close()
 
@@ -287,8 +287,8 @@ def municipios_codigosPostais(cursor):
 	f.readline()
 	to_db = []
 	for line in f:
-  		values = line.split(";")
-  		to_db.append((values[0],values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[8],values[9],values[10],values[11],values[12],values[13],values[14],values[15],values[16]))
+		values = line.split(";")
+		to_db.append((values[0],values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[8],values[9],values[10],values[11],values[12],values[13],values[14],values[15],values[16]))
   	
 	f.close()
 
@@ -616,9 +616,9 @@ def repDatabase():
 
 	connection = None
 	try:
-	    connection = sqlite3.connect("./rep-database.db")
+		connection = sqlite3.connect("./rep-database.db")
 	except Error as e:
-	    print(e)
+		print(e)
 
 	cursor = connection.cursor()
 
@@ -888,8 +888,12 @@ def repDatabase():
 	cursor.execute("UPDATE TEMP_ENTIDADES SET NOME_ENTIDADE = trim(replace(replace(replace(NOME_ENTIDADE, X'0A', ' '),'  ',' '),'  ',' '));")
 	cursor.execute("UPDATE TEMP_ENTIDADES SET SIGLA = trim(replace(replace(replace(SIGLA, X'0A', ' '),'  ',' '),'  ',' '));")
 
-	cursor.execute("UPDATE TEMP_ENTIDADES SET NOME_ENTIDADE = replace(NOME_ENTIDADE, 'CGTP-IN', 'CGTPIN') WHERE instr(NOME_ENTIDADE, 'CGTP-IN') > 0;")
-	cursor.execute("UPDATE TEMP_ENTIDADES SET NOME_ENTIDADE = replace(SIGLA, 'CGTP-IN', 'CGTPIN') WHERE instr(SIGLA, 'CGTP-IN') > 0;")
+	connection.commit()
+
+	#cursor.execute("UPDATE TEMP_ENTIDADES SET NOME_ENTIDADE = replace(NOME_ENTIDADE, 'CGTP-IN', 'CGTPIN') WHERE instr(NOME_ENTIDADE, 'CGTP-IN') > 0;")
+	#cursor.execute("UPDATE TEMP_ENTIDADES SET NOME_ENTIDADE = replace(SIGLA, 'CGTP-IN', 'CGTPIN') WHERE instr(SIGLA, 'CGTP-IN') > 0;")
+
+	connection.commit()
 
 	cursor.execute("UPDATE TEMP_ENTIDADES SET NOME_ENTIDADE = replace(NOME_ENTIDADE,' . ','. ')  WHERE instr(NOME_ENTIDADE, ' . ') > 0;")
 	cursor.execute("UPDATE TEMP_ENTIDADES SET NOME_ENTIDADE = replace(NOME_ENTIDADE,' NAC. ',' NACIONAL ')  WHERE instr(NOME_ENTIDADE, ' NAC. ') > 0;")
@@ -1020,18 +1024,21 @@ def repDatabase():
 
 	cursor.execute("""UPDATE TEMP_ENTIDADES SET SIGLA = TRIM(SUBSTR(NOME_ENTIDADE,0,instr(NOME_ENTIDADE,'-'))) 
 	WHERE (SIGLA IS NULL OR TRIM(SIGLA)='') AND instr(NOME_ENTIDADE, '-') > 0 AND instr(TRIM(SUBSTR(NOME_ENTIDADE,0,instr(NOME_ENTIDADE,'-'))),' ') <=0;""")
+	connection.commit()
 
 	cursor.execute("""UPDATE TEMP_ENTIDADES SET NOME_ENTIDADE = TRIM(SUBSTR(NOME_ENTIDADE,instr(NOME_ENTIDADE,'-') + 1, LENGTH(NOME_ENTIDADE) - instr(NOME_ENTIDADE,'-') + 1)) 
 	WHERE instr(NOME_ENTIDADE, '-') > 0 AND instr(TRIM(SUBSTR(NOME_ENTIDADE,0,instr(NOME_ENTIDADE,'-'))),' ') <=0
 	AND (TRIM(SIGLA)='' OR TRIM(SIGLA)=TRIM(SUBSTR(NOME_ENTIDADE,0,instr(NOME_ENTIDADE,'-'))));""")
+	connection.commit()
 
 	cursor.execute("""UPDATE TEMP_ENTIDADES SET SIGLA = TRIM(SUBSTR(NOME_ENTIDADE,instr(NOME_ENTIDADE,'-') + 1, LENGTH(NOME_ENTIDADE) - instr(NOME_ENTIDADE,'-') + 1)) 
 	WHERE (SIGLA IS NULL OR TRIM(SIGLA)='') AND instr(NOME_ENTIDADE, '-') > 0 AND instr(TRIM(SUBSTR(NOME_ENTIDADE,instr(NOME_ENTIDADE,'-') + 1, LENGTH(NOME_ENTIDADE) - instr(NOME_ENTIDADE,'-') + 1)),' ') <=0;""")
+	connection.commit()
 
 	cursor.execute("""UPDATE TEMP_ENTIDADES SET NOME_ENTIDADE = TRIM(SUBSTR(NOME_ENTIDADE,0,instr(NOME_ENTIDADE,'-')))
 	WHERE instr(NOME_ENTIDADE, '-') > 0 AND instr(TRIM(SUBSTR(NOME_ENTIDADE,instr(NOME_ENTIDADE,'-') + 1, LENGTH(NOME_ENTIDADE) - instr(NOME_ENTIDADE,'-') + 1)) , ' ') <=0
 	AND (TRIM(SIGLA)='' OR TRIM(SIGLA)=TRIM(SUBSTR(NOME_ENTIDADE,instr(NOME_ENTIDADE,'-') + 1, LENGTH(NOME_ENTIDADE) - instr(NOME_ENTIDADE,'-') + 1)));""")
-
+	connection.commit()
 
 	cursor.execute("""CREATE VIEW TEMP_DATAS_ENTIDADES AS SELECT ID_ENTIDADE, MIN(DATA) AS MIN_DATA, MAX(DATA) AS MAX_DATA FROM (
 		SELECT ID_ENTIDADE, date(replace(DATABTE,'.','-')) AS DATA FROM TEMP_ALTERACOES_ESTATUTOS
@@ -1041,6 +1048,7 @@ def repDatabase():
 		SELECT ID_ENTIDADE, date(replace(DATA_ELEICAO,'.','-')) AS DATA FROM TEMP_PROCESSOS LEFT OUTER JOIN TEMP_ELEICAO_CORPOS_GERENTES ON TEMP_PROCESSOS.PROCESSO=TEMP_ELEICAO_CORPOS_GERENTES.PROCESSO
 	) GROUP BY ID_ENTIDADE;""")
 
+	connection.commit()
 
 	cursor.execute("""INSERT INTO Org_Patronal 
 	SELECT TEMP_ENTIDADES.ID_ENTIDADE, NULL,
@@ -1149,6 +1157,7 @@ def repDatabase():
 	FROM ORG_SINDICAL AS A, ORG_SINDICAL AS B
 	WHERE A.Nome_Organizacao_Pai IS NOT NULL AND B.NOME = A.Nome_Organizacao_Pai;""")
 
+	connection.commit()
 
 	cursor.execute("UPDATE ORG_SINDICAL SET ACRONIMO=replace(ACRONIMO, ' CGTPIN', '') WHERE instr(ACRONIMO, ' CGTPIN') > 0;")
 	cursor.execute("UPDATE ORG_SINDICAL SET ACRONIMO=replace(ACRONIMO, '/CGTPIN', '') WHERE instr(ACRONIMO, '/CGTPIN') > 0;")
