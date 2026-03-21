@@ -1,3 +1,23 @@
+/*!
+* Especifico do novo layout
+*/
+html {
+  scroll-padding-top: 3.5rem;
+}
+
+header {
+  padding-top: 9.5rem;
+  padding-bottom: 6rem;
+}
+
+section {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+/*!
+* Especifico do novo layout
+*/
+
 .dropbtn {
   background-color: #78C2AD;
   color: white;

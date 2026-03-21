@@ -617,7 +617,7 @@ def repDatabase():
 	connection = None
 	try:
 		connection = sqlite3.connect("./rep-database.db")
-	except Error as e:
+	except sqlite3.Error as e:
 		print(e)
 
 	cursor = connection.cursor()

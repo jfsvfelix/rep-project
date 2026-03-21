@@ -1,99 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<meta name="description" content="DOT - Dados das Organizações do Trabalho" />
+		<meta name="author" content="DGERT" />
+		<title>DOT - Dados das Organizações do Trabalho</title>
+		<link rel="icon" href="favicon.ico"/>
+		<!-- Core theme CSS (includes Bootstrap)-->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-<head lang="en">
-	<title>DOT - Dados das Organizações do Trabalho</title>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="robots" content="noindex">
-	<link rel="icon" href="favicon.ico"/>
-	<link rel=stylesheet type=text/css href="css/bootstrap.min.css" />
-	<link rel=stylesheet type=text/css href="css/dropdown.css" />
-    <script src="js/Chart.min.js"></script>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-41150597-9"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-		gtag('config', 'UA-41150597-9');
-	</script>
-</head>
+		<link rel=stylesheet type=text/css href="css/dropdown.css" />
+		<script src="js/Chart.min.js"></script>
 
-<body>
-	<div class="container">
-		<nav class="navbar navbar-light navbar-expand h4 p-3">
-			<ul class="navbar-nav align-items-baseline">
-				<li class="nav-item active pr-2 mr-5">
-					<a class="nav-link"><h2>DOT</h2></a>
-				</li>
-				<li class="nav-item active">
-					<a class="nav-link mx-2">Apresentação</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link mx-2" href="dashboard-search/">Pesquisa</a>
-				</li>
-			</ul>
-		</nav>
-		
-		<div class="text-justify">
-			<h5>O que é a DOT?</h5>
-			<p>
-				A DOT (Dados das Organizações do Trabalho) é a base de dados das organizações sindicais e de
-				empregadores portuguesas, sediadas no território do Continente e registadas, desde 1975, na
-				<a href="https://www.dgert.gov.pt/">Direção-Geral do Emprego e das Relações de Trabalho (DGERT)</a>, o serviço com competência
-				para a prática dos atos relativos às organizações representativas de trabalhadores e de
-				empregadores, atribuídos por lei ao ministério responsável pela área laboral.
-			</p>
-			<h5>Como se pesquisa na DOT?</h5>
-			<p>
-				Os dados relativos às organizações sindicais e de empregadores podem ser pesquisados por
-				(uma ou mais opções em simultâneo):
-			</p>
-			<ul>
-				<li>Tipo de organização</li>
-				<li>Termo ou acrónimo</li>
-				<li>Distrito da sede</li>
-				<li>Ano de início e de fim da atividade</li>
-			</ul>
-			<p>
-				A opção &quot;Exportar resultados em Excel&quot; permite obter um ficheiro com a lista de resultados de
-				uma pesquisa, incluindo ainda os seguintes atributos (nos casos em que existam):
-			</p>
-			<ul>
-				<li>Negociação coletiva</li>
-				<li>Avisos prévios de greve (desde 2013 até 2019)</li>
-				<li>Estatutos e suas alterações</li>
-				<li>Eleições dos dirigentes</li>
-			</ul>
-			<p class="mb-1">
-				Os dois gráficos seguintes mostram o número de organizações sindicais e de empregadores ativas, por ano e tipo,
-de 1996 à atualidade.
-			</p>
-			<div class="row">
-				<div class="col-12 col-xl-6">
-					<canvas id="org_sindical_year"></canvas>
-				</div>
-				<div class="col-12 col-xl-6">
-					<canvas id="org_patronal_year"></canvas>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-41150597-9"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-41150597-9');
+		</script>
+	</head>
+	<body id="page-top">
+		<!-- Navigation-->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+			<div class="container px-4">
+				<a class="navbar-brand" href="/">DOT</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+				<div class="collapse navbar-collapse" id="navbarResponsive">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item"><a class="nav-link active" href="/">Apresentação</a></li>
+						<li class="nav-item"><a class="nav-link" href="/dashboard-search/">Pesquisa</a></li>
+					</ul>
 				</div>
 			</div>
-		</div>
-		<div class="text-justify">
-			<h5>Qual o objetivo da DOT?</h5>
-			<p>
-				O objetivo da DOT é agregar e disponibilizar informação pública relevante, até agora dispersa,
-				a investigadores, serviços públicos, parceiros sociais, empresas e cidadãos em geral. Deste
-				modo, pretende-se contribuir para uma sociedade mais informada e transparente e para o
-				aprofundamento do conhecimento sobre estas organizações.
-			</p>
-			<p>
-				A criação da DOT tem origem no Protocolo de Colaboração celebrado entre a DGERT e a equipa multidisciplinar do projeto de investigação 
-				<a href="https://rep.ics.ulisboa.pt/">REP - Representatividade dos Parceiros Sociais e Governança Económica</a>, financiado pela
-				<a href="https://www.fct.pt/">Fundação para a Ciência e a Tecnologia</a> (ref.ª <a href="https://www.fct.pt/apoios/projectos/consulta/vglobal_projecto?idProjecto=150396&idElemConcurso=11976">PTDC/SOC-SOC/29207/2017</a>), entre 2018 e 2022, e liderado pelo <a href="https://www.ics.ulisboa.pt/">Instituto de Ciências Sociais da Universidade de Lisboa</a>.
-			</p>
-		</div>
+		</nav>
+		<!-- Header-->
+		<header class="bg-light">
+			<div class="container px-4 text-center">
+				<h1 class="fw-bolder">O que é a DOT?</h1>
+				<p class="lead">A DOT (Dados das Organizações do Trabalho) é a base de dados das organizações sindicais e de empregadores portuguesas, sediadas no território do Continente e registadas, desde 1975, na <a href="https://www.dgert.gov.pt/" target="_blank" title="Site da DGERT">Direção-Geral do Emprego e das Relações de Trabalho (DGERT)</a>, o serviço com competência para a prática dos atos relativos às organizações representativas de trabalhadores e de empregadores, atribuídos por lei ao ministério responsável pela área laboral.</p>
+			</div>
+		</header>
+		<!-- Pesquisa section-->
+		<section id="pesquisa">
+			<div class="container px-4">
+				<div class="row gx-4 justify-content-center">
+					<div class="col-lg-12">
+						<h2>Como se pesquisa na DOT?</h2>
+						<p class="lead">Os dados relativos às organizações sindicais e de empregadores podem ser pesquisados por (uma ou mais opções em simultâneo):</p>
+						<ul>
+							<li>Tipo de organização</li>
+							<li>Termo ou acrónimo</li>
+							<li>Distrito da sede</li>
+							<li>Ano de início e de fim da atividade</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Exportar section-->
+		<section class="bg-light" id="exportar">
+			<div class="container px-4">
+				<div class="row gx-4 justify-content-center">
+					<div class="col-lg-12">
+						<h2>Exportar resultados em Excel</h2>
+						<p class="lead">A opção &quot;Exportar resultados em Excel&quot; permite obter um ficheiro com a lista de resultados de uma pesquisa, incluindo ainda os seguintes atributos (nos casos em que existam):</p>
+						<ul>
+							<li>Negociação coletiva</li>
+							<li>Avisos prévios de greve (desde 2013 até 2019)</li>
+							<li>Estatutos e suas alterações</li>
+							<li>Eleições dos dirigentes</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Gráficos section-->
+		<section id="graficos">
+			<div class="container px-4">
+				<div class="row gx-4 justify-content-center">
+					<div class="col-lg-12">
+						<h2>Gráficos</h2>
+						<p class="lead">Os dois gráficos seguintes mostram o número de organizações sindicais e de empregadores ativas, por ano e tipo, de 1996 à atualidade.</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="container-fluid px-4">
+				<div class="row">
+					<div class="col-12 col-xl-6">
+						<canvas id="org_sindical_year"></canvas>
+					</div>
+					<div class="col-12 col-xl-6">
+						<canvas id="org_patronal_year"></canvas>
+					</div>
+				</div>
+			</div>
+
+		</section>
+
+		<!-- Objetivo section-->
+		<section id="objetivo">
+			<div class="container px-4">
+				<div class="row gx-4 justify-content-center">
+					<div class="col-lg-12">
+						<h2>Qual o objetivo da DOT?</h2>
+						<p class="lead">O objetivo da DOT é agregar e disponibilizar informação pública relevante, até agora dispersa, a investigadores, serviços públicos, parceiros sociais, empresas e cidadãos em geral. Deste modo, pretende-se contribuir para uma sociedade mais informada e transparente e para o aprofundamento do conhecimento sobre estas organizações.</p>
+						<p class="lead">A criação da DOT tem origem no Protocolo de Colaboração celebrado entre a DGERT e a equipa multidisciplinar do projeto de investigação <a href="https://rep.ics.ulisboa.pt/" target="_blank">REP - Representatividade dos Parceiros Sociais e Governança Económica</a>, financiado pela <a href="https://www.fct.pt/" target="_blank">Fundação para a Ciência e a Tecnologia</a> (ref.ª <a href="https://www.fct.pt/apoios/projectos/consulta/vglobal_projecto?idProjecto=150396&idElemConcurso=11976" target="_blank">PTDC/SOC-SOC/29207/2017</a>), entre 2018 e 2022, e liderado pelo <a href="https://www.ics.ulisboa.pt/" target="_blank">Instituto de Ciências Sociais da Universidade de Lisboa</a>.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Footer-->
+		<footer class="py-3 bg-body-tertiary">
+			<div class="container px-4 text-body-secondary"><p class="m-0 text-center">DGERT - DOT | 2022-2026</p></div>
+		</footer>
+		<!-- Bootstrap core JS-->
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+		<!-- Core theme JS-->
+		<script src="js/scripts.js"></script>
+
 		<script>
 
 			let sublabelSindical = {
@@ -191,8 +221,6 @@ de 1996 à atualidade.
 			});
 
 		</script>
-	</div>
 
-</body>
-
+    </body>
 </html>

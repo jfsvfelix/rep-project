@@ -1,154 +1,189 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="pt">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<meta name="description" content="DOT - Dados das Organizações do Trabalho" />
+		<meta name="author" content="DGERT" />
+		<title>DOT - Dados das Organizações do Trabalho</title>
+		<link rel="icon" href="../favicon.ico"/>
+		<!-- Core theme CSS (includes Bootstrap)-->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-<head>
-    <title>DOT - Dados das Organizações do Trabalho</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex">
-	<link rel="icon" href="../favicon.ico"/>
-    <link rel=stylesheet type=text/css href="../css/bootstrap.min.css" />
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-41150597-9"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-		gtag('config', 'UA-41150597-9');
-	</script>
-</head>
+		<link rel=stylesheet type=text/css href="../css/dropdown.css" />
+		<script src="../js/Chart.min.js"></script>
 
-<body>
-    <div class="container" style="text-align:center;">
-        <nav class="navbar navbar-light navbar-expand h4 p-3">
-            <ul class="navbar-nav align-items-baseline">
-                <li class="nav-item active pr-2 mr-5">
-					<a class="nav-link" href="../"><h2>DOT</h2></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link mx-2" href="../">Apresentação</a>
-				</li>
-				<li class="nav-item active">
-					<a class="nav-link mx-2" href="../dashboard-search/">Pesquisa</a>
-				</li>
-				<!--<li class="nav-item">
-					<a class="nav-link mx-2" href="/static/data/index.html">Arquivo</a>
-				</li>-->
-            </ul>
-        </nav>
-        <form class="form-inline" id="form1">
-            <div class="form-row">
-                <div class="input-group col-4">
-                    <label for="table_org" class="form-text">Tipo de organização:&nbsp;</label>
-                    <select class="form-control" name="table_org" id="table_org">
-                        <option value="">Selecionar...</option>
-                        <option value="Unions" {{ 'selected' if search['table']=="Unions" }}>Sindicais</option>
-                        <option value="Employees" {{ 'selected' if search['table']=="Employees" }}>Empregadores</option>
-                    </select>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-41150597-9"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-41150597-9');
+		</script>
+	</head>
+    <body id="page-top">
+		<!-- Navigation-->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+			<div class="container px-4">
+				<a class="navbar-brand" href="/">DOT</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+				<div class="collapse navbar-collapse" id="navbarResponsive">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item"><a class="nav-link" href="/">Apresentação</a></li>
+						<li class="nav-item"><a class="nav-link active" href="/dashboard-search/">Pesquisa</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+        <div class="container py-4 my-4">
+
+            <div class="row">
+                <form class="row gy-2 gx-3 align-items-center" id="form1">
+
+                    <div class="col-sm-8">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" placeholder="Termo ou acrónimo" aria-label="Termo ou acrónimo" id="organization" name="organization" value="{{ search['term'] }}">
+                            <label for="organization">Termo ou acrónimo</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" name="table_org" id="table_org">
+                                <option value="">Selecionar...</option>
+                                <option value="Unions" {{ 'selected' if search['table']=="Unions" }}>Sindicais</option>
+                                <option value="Employees" {{ 'selected' if search['table']=="Employees" }}>Empregadores</option>
+                            </select>
+                            <label for="table_org">Tipo de organização</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" name="distrito" id="distrito">
+                                <option value="">Selecionar...</option>
+                                {% for distrito in ["AVEIRO","BEJA","BRAGA","BRAGANÇA","CASTELO BRANCO","COIMBRA","ÉVORA","FARO","GUARDA","LEIRIA","LISBOA","PORTALEGRE","PORTO","SANTARÉM","SETÚBAL","VIANA DO CASTELO","VILA REAL","VISEU"]%}
+                                <option value="{{ distrito }}" {{ 'selected' if search['distrito']==distrito }}>{{ distrito }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <label for="distrito">Distrito</label>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-sm-4">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="ano-inicio" name="ano-inicio">
+                                <option value="">Selecionar...</option>
+                                {% for i in range(1977, date.today().year+1)%}
+                                <option value="{{i}}" {{ 'selected' if search['inicio']==i }}>{{i}}</option>
+                                {%endfor%}
+                            </select>
+                            <label for="ano-inicio">Ano de início</label>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-sm-4">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="ano-fim" name="ano-fim">
+                                <option value="">Selecionar...</option>
+                                {% for i in range(1977, date.today().year+1)%}
+                                <option value="{{i}}" {{ 'selected' if search['fim']==i }}>{{i}}</option>
+                                {%endfor%}
+                            </select>
+                            <label for="ano-fim">Ano de fim</label>
+                        </div>
+                    </div>
+
+                    <div class="col-auto ms-auto">
+                        <div class="input-group mb-3">
+                            <button type="submit" class="btn btn-primary">Pesquisar</button>
+                        </div>
+                    </div>
+                </form>
+            </div><!-- row -->
+
+            <nav class="justify-content-center p-1 d-flex justify-content-between align-items-center">
+                <a href="../dashboard-search/" class="btn btn-primary">Nova pesquisa</a>
+                <div class="p-1 text-center">
+                    {% if (search['page'] or 0) > 0 %}
+                    <a
+                        href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ search['page']-1 }}">Pagina
+                        anterior</a>
+                    {% else %}
+                    <span>Pagina anterior</span>
+                    {% endif %}
+                    <span>&bull;</span>
+                    <span>Página {{ (search['page'] or 0) + 1 }}</span>
+                    <span>&bull;</span>
+                    {% if not last_page %}
+                    <a
+                        href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ (search['page'] or 0)+1 }}">Pagina
+                        seguinte</a>
+                    {% else %}
+                    <span>Pagina seguinte</span>
+                    {% endif %}
                 </div>
-                <div class="input-group col-5">
-                    <label for="org" class="form-text">Termo ou acrónimo:&nbsp;</label>
-                    <input class="form-control" placeholder="Inserir..." id="org" name="organization"
-                        value="{{ search['term'] }}" />
-                </div>
-                <div class="input-group col-3">
-                    <label class="form-text" for="distrito">Distrito:&nbsp;</label>
-                    <select class="form-control" name="distrito" id="distrito">
-                        <option value="">Selecionar...</option>
-                        {% for distrito in ["AVEIRO","BEJA","BRAGA","BRAGANÇA","CASTELO BRANCO","COIMBRA","ÉVORA","FARO","GUARDA","LEIRIA","LISBOA","PORTALEGRE","PORTO","SANTARÉM","SETÚBAL","VIANA DO CASTELO","VILA REAL","VISEU"]%}
-                        <option value="{{ distrito }}" {{ 'selected' if search['distrito']==distrito }}>{{ distrito }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="input-group col-4">
-                    <label class="form-text" for="distrito">Ano de início:&nbsp;</label>
-                    <select class="form-control" placeholder="Ano de início" id="ano-inicio" name="ano-inicio">
-                        <option value="">Selecionar...</option>
-                        {% for i in range(1977, date.today().year+1)%}
-                        <option value="{{i}}" {{ 'selected' if search['inicio']==i }}>{{i}}</option>
-                        {%endfor%}
-                    </select>
-                </div>
-                <div class="input-group col-4">
-                    <label class="form-text" for="distrito">Ano de fim:&nbsp;</label>
-                    <select class="form-control" placeholder="Ano de fim" id="ano-fim" name="ano-fim">
-                        <option value="">Selecionar...</option>
-                        {% for i in range(1977, date.today().year+1)%}
-                        <option value="{{i}}" {{ 'selected' if search['fim']==i }}>{{i}}</option>
-                        {%endfor%}
-                    </select>
-                </div>
-                <button class="btn btn-primary col-4" type="submit">Pesquisar</button>
+                <a target="_blank"
+                    href="../export/?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}"
+                    class="btn btn-primary">Exportar resultados em Excel</a>
+            </nav>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead class="sticky-top bg-primary text-white">
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Denominação</th>
+                            <th>Acrónimo</th>
+                            <th>Distrito sede</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">{% for row in results %}
+                        <tr>{% for col in row %}<td>{{ col }}</td>{% endfor %}</tr>{% else %}<tr>
+                            <td colspan="6">Sem mais resultados...</td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table>
             </div>
-        </form>
-        <nav class="justify-content-center p-3 d-flex justify-content-between align-items-center">
-            <a href="../dashboard-search/" class="btn btn-primary">Nova pesquisa</a>
-            <div>
-                {% if (search['page'] or 0) > 0 %}
-                <a
-                    href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ search['page']-1 }}">Pagina
-                    anterior</a>
-                {% else %}
-                <span>Pagina anterior</span>
-                {% endif %}
-                <span>&bull;</span>
-                <span>Página {{ (search['page'] or 0) + 1 }}</span>
-                <span>&bull;</span>
-                {% if not last_page %}
-                <a
-                    href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ (search['page'] or 0)+1 }}">Pagina
-                    seguinte</a>
-                {% else %}
-                <span>Pagina seguinte</span>
-                {% endif %}
-            </div>
-            <a target="_blank"
-                href="../export/?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}"
-                class="btn btn-primary">Exportar resultados em Excel</a>
-        </nav>
-        <table class="table table-striped">
-            <thead class="sticky-top bg-primary text-white">
-                <tr>
-                    <th>Tipo</th>
-                    <th>Denominação</th>
-                    <th>Acrónimo</th>
-                    <th>Distrito sede</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>{% for row in results %}
-                <tr>{% for col in row %}<td>{{ col }}</td>{% endfor %}</tr>{% else %}<tr>
-                    <td colspan="6">Sem mais resultados...</td>
-                </tr>{% endfor %}
-            </tbody>
-        </table>
-        <nav class="justify-content-center p-3 d-flex justify-content-between align-items-center">
-            <a href="../dashboard-search/" class="btn btn-primary">Nova pesquisa</a>
-            <div>
-                {% if (search['page'] or 0) > 0 %}
-                <a
-                    href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ search['page']-1 }}">Pagina
-                    anterior</a>
-                {% else %}
-                <span>Pagina anterior</span>
-                {% endif %}
-                <span>&bull;</span>
-                <span>Página {{ (search['page'] or 0) + 1 }}</span>
-                <span>&bull;</span>
-                {% if not last_page %}
-                <a
-                    href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ (search['page'] or 0)+1 }}">Pagina
-                    seguinte</a>
-                {% else %}
-                <span>Pagina seguinte</span>
-                {% endif %}
-            </div>
-            <a target="_blank"
-                href="../export/?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}"
-                class="btn btn-primary">Exportar resultados em Excel</a>
-        </nav>
-    </div>
-</body>
+            <nav class="justify-content-center p-1 d-flex justify-content-between align-items-center">
+                <a href="../dashboard-search/" class="btn btn-primary">Nova pesquisa</a>
+                <div class="p-1 text-center">
+                    {% if (search['page'] or 0) > 0 %}
+                    <a
+                        href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ search['page']-1 }}">Pagina
+                        anterior</a>
+                    {% else %}
+                    <span>Pagina anterior</span>
+                    {% endif %}
+                    <span>&bull;</span>
+                    <span>Página {{ (search['page'] or 0) + 1 }}</span>
+                    <span>&bull;</span>
+                    {% if not last_page %}
+                    <a
+                        href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ (search['page'] or 0)+1 }}">Pagina
+                        seguinte</a>
+                    {% else %}
+                    <span>Pagina seguinte</span>
+                    {% endif %}
+                </div>
+                <a target="_blank"
+                    href="../export/?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}"
+                    class="btn btn-primary">Exportar resultados em Excel</a>
+            </nav>
+        </div>
+
+		<!-- Footer-->
+		<footer class="py-3 bg-body-tertiary">
+            <div class="container px-4 text-body-secondary"><p class="m-0 text-center">DGERT - DOT | 2022-2026</p></div>
+		</footer>
+		<!-- Bootstrap core JS-->
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+		<!-- Core theme JS-->
+		<script src="../js/scripts.js"></script>
+
+    </body>
 </html>
