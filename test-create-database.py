@@ -6,7 +6,7 @@ def create_connection(db_file):
     conn = None
     try:
         # If the file doesn't exist, SQLite will create it automatically
-        conn = sqlite3.connect(db_file)
+        conn = sqlite3.connect("./my_app_database.db")
         print(f"Connected to SQLite. Version: {sqlite3.version}")
         return conn
     except Error as e:
