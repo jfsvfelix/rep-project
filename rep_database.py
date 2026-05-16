@@ -184,8 +184,7 @@ def getTable_Ircts(ano,cursor):
 
 
 def ircts(cursor):
-	#for ano in range(1975,datetime.today().year+1): canceling 2026 for now
-	for ano in range(1975,datetime.today().year):
+	for ano in range(1975,datetime.today().year+1):
 		getTable_Ircts(ano,cursor)
 
 
