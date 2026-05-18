@@ -179,55 +179,80 @@
 
 				new Chart(document.getElementById("org_sindical_year"), {
 					type: 'bar',
-					data: {
-						labels: labels,
-						datasets: Object.keys(sublabelSindical).map(lb => ({
-							label: sublabelSindical[lb],
-							data: data.map(d => d[lb]),
-							backgroundColor: sublabelSindicalColor[lb]
-						}))
-					},
-					options: {
-						title: {
-							display: true,
-							text: 'Organizações sindicais por ano e tipo'
+						data: {
+							labels: labels,
+							datasets: Object.keys(sublabelSindical).map(lb => ({
+								label: sublabelSindical[lb],
+								data: data.map(d => d[lb]),
+								backgroundColor: sublabelSindicalColor[lb]
+							}))
 						},
-						legend: { display: true,
-									labels: {
-									fontSize: 10
-									}
+						options: {
+							plugins: {
+								title: {
+									display: true,
+									text: 'Organizações sindicais por ano e tipo'
 								},
-						scales: {
-							xAxes: [{ stacked: true, gridLines: { display: false } }],
-							yAxes: [{ stacked: true, gridLines: { display: false }, ticks: {  suggestedMax: max } }]
+								legend: { 
+									display: true,
+									labels: {
+										font: {
+											size: 10 // Changed from fontSize: 10
+										}
+									}
+								}
+							},
+							scales: {
+								x: { // Changed from xAxes: [{...}]
+									stacked: true, 
+									grid: { display: false } // Changed from gridLines
+								},
+								y: { // Changed from yAxes: [{...}]
+									stacked: true, 
+									grid: { display: false }, // Changed from gridLines
+									suggestedMax: max // Placed directly under the axis root in v4
+								}
+							}
 						}
-					}
 				});
+
 				new Chart(document.getElementById("org_patronal_year"), {
 					type: 'bar',
-					data: {
-						labels: labels,
-						datasets: Object.keys(sublabelPatronal).map(lb => ({
-							label: sublabelPatronal[lb],
-							data: data.map(d => d[lb]),
-							backgroundColor: sublabelPatronalColor[lb]
-						}))
-					},
-					options: {
-						title: {
-							display: true,
-							text: 'Organizações de empregadores por ano e tipo'
+						data: {
+							labels: labels,
+							datasets: Object.keys(sublabelPatronal).map(lb => ({
+								label: sublabelPatronal[lb],
+								data: data.map(d => d[lb]),
+								backgroundColor: sublabelPatronalColor[lb]
+							}))
 						},
-						legend: { display: true,
-									labels: {
-									fontSize: 10
-									}
+						options: {
+							plugins: {
+								title: {
+									display: true,
+									text: 'Organizações de empregadores por ano e tipo'
 								},
-						scales: {
-							xAxes: [{ stacked: true, gridLines: { display: false } }],
-							yAxes: [{ stacked: true, gridLines: { display: false }, ticks: {  suggestedMax: max } }]
+								legend: { 
+									display: true,
+									labels: {
+										font: {
+											size: 10 // Changed from fontSize: 10
+										}
+									}
+								}
+							},
+							scales: {
+								x: { // Changed from xAxes: [{...}]
+									stacked: true, 
+									grid: { display: false } // Changed from gridLines
+								},
+								y: { // Changed from yAxes: [{...}]
+									stacked: true, 
+									grid: { display: false }, // Changed from gridLines
+									suggestedMax: max // Placed directly under the axis root in v4
+								}
+							}
 						}
-					}
 				});
 			});
 
