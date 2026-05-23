@@ -41,8 +41,8 @@
 
         <main id="main-content">
             <div class="container py-4 my-4">
-                <h1>Pesquisa</h1>
-                
+                <h1 class="pt-1 fw-bolder">Pesquisa</h1>
+
                 <div class="row shadow mb-2 bg-body-tertiary rounded">
                     <form class="row gy-2 gx-3 align-items-center" id="form1">
 
@@ -114,20 +114,20 @@
                     <div class="p-1 text-center">
                         {% if (search['page'] or 0) > 0 %}
                         <a
-                            href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ search['page']-1 }}">Pagina
+                            href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ search['page']-1 }}">Página
                             anterior</a>
                         {% else %}
-                        <span>Pagina anterior</span>
+                        <span>Página anterior</span>
                         {% endif %}
                         <span>&bull;</span>
                         <span>Página {{ (search['page'] or 0) + 1 }}</span>
                         <span>&bull;</span>
                         {% if not last_page %}
                         <a
-                            href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ (search['page'] or 0)+1 }}">Pagina
+                            href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ (search['page'] or 0)+1 }}">Página
                             seguinte</a>
                         {% else %}
-                        <span>Pagina seguinte</span>
+                        <span>Página seguinte</span>
                         {% endif %}
                     </div>
                     <a target="_blank"
@@ -158,20 +158,20 @@
                     <div class="p-1 text-center">
                         {% if (search['page'] or 0) > 0 %}
                         <a
-                            href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ search['page']-1 }}">Pagina
+                            href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ search['page']-1 }}">Página
                             anterior</a>
                         {% else %}
-                        <span>Pagina anterior</span>
+                        <span>Página anterior</span>
                         {% endif %}
                         <span>&bull;</span>
                         <span>Página {{ (search['page'] or 0) + 1 }}</span>
                         <span>&bull;</span>
                         {% if not last_page %}
                         <a
-                            href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ (search['page'] or 0)+1 }}">Pagina
+                            href="?table_org={{ search['table'] }}&organization={{ search['term'] }}&distrito={{ search['distrito'] }}&setor={{ search['setor'] }}&ano-inicio={{ search['inicio'] }}&ano-fim={{ search['fim'] }}&page={{ (search['page'] or 0)+1 }}">Página
                             seguinte</a>
                         {% else %}
-                        <span>Pagina seguinte</span>
+                        <span>Página seguinte</span>
                         {% endif %}
                     </div>
                     <a target="_blank"
