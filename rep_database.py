@@ -30,26 +30,24 @@ def getTable_AlteracoesEstatutos(ano,cursor):
 	result = getResponse("alteracoesEstatutos", ano)
 	final = json.loads(result)
 	
+	query = """INSERT INTO TEMP_ALTERACOES_ESTATUTOS1 (TIPO,ESPECIE,SUB_ESPECIE,NUMERO,ANO,CONTROLO,SERVICO,CODENTG,CODENTE,NUMALT,NUMBTE,DATABTE,SERIEBTE,AMBITO_GEOGRAFICO)
+    	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+	
+	to_db = []
 	for key in final:	
 		linha = final[key]
-
-		format_str = """INSERT INTO TEMP_ALTERACOES_ESTATUTOS1 (TIPO,ESPECIE,SUB_ESPECIE,NUMERO,ANO,CONTROLO,SERVICO,CODENTG,CODENTE,NUMALT,NUMBTE,DATABTE,SERIEBTE,AMBITO_GEOGRAFICO)
-    	VALUES ("{tipo}", "{especie}", "{subEspecie}", "{numero}", "{ano}", "{controlo}","{servico}","{codEntG}","{codEntE}","{numAlt}","{numBTE}","{dataBTE}","{serieBTE}","{ambitoGeografico}");"""
+		ambGeo = linha.get("ambitoGeografico", "")
+		servico = linha.get("servico", "")
 		
-		if "ambitoGeografico" not in linha:
-			ambGeo = ""
-		else:
-			ambGeo = linha["ambitoGeografico"]
-		if "servico" not in linha:
-			servico = ""
-		else:
-			servico = linha["servico"]
-		
-		sql_command = format_str.format(tipo=linha["tipo"],especie=linha["especie"],subEspecie=linha["subEspecie"],numero=linha["numero"],ano=linha["ano"],controlo=linha["controlo"],
-			servico=servico,codEntG=linha["codEntG"],codEntE=linha["codEntE"],numAlt=linha["numAlt"],numBTE=linha["numBTE"],dataBTE=linha["dataBTE"],
-			serieBTE=linha["serieBTE"],ambitoGeografico=ambGeo)
+		to_db.append((
+			linha.get("tipo"), linha.get("especie"), linha.get("subEspecie"),
+			linha.get("numero"), linha.get("ano"), linha.get("controlo"),
+			servico, linha.get("codEntG"), linha.get("codEntE"),
+			linha.get("numAlt"), linha.get("numBTE"), linha.get("dataBTE"),
+			linha.get("serieBTE"), ambGeo
+		))
 
-		cursor.execute(sql_command)
+	cursor.executemany(query, to_db)
 
 
 def alteracoesEstatutos(cursor):
@@ -61,33 +59,29 @@ def getTable_EleicoesCorposGerentes(ano,cursor):
 	result = getResponse("eleicoesCorposGerentes", ano)
 	final = json.loads(result)	
 
+	query = """INSERT INTO TEMP_ELEICAO_CORPOS_GERENTES1 (CODENTG,CODENTE,NUMALT,NUMERO_ELEICAO,DATA_ELEICAO,INSCRITOS,VOTANTES,MESES_MANDATO,DATABTE,NUMBTE,SERIEBTE,NUMMAXEFECT,NUMMINEFECT,NUMMAXSUPL,NUMMINSUPL,NUM_H_EFECT,NUM_H_SUPL,NUM_M_EFECT,NUM_M_SUPL,TIPO,ESPECIE,SUB_ESPECIE,NUMERO,ANO,CONTROLO,SERVICO)
+    	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+	to_db = []
 	for key in final:
 		linha = final[key]
+		servico = linha.get("servico", "")
+		inscritos = linha.get("inscritos", "")
+		votantes = linha.get("votantes", linha.get("votates", ""))
 
-		format_str = """INSERT INTO TEMP_ELEICAO_CORPOS_GERENTES1 (CODENTG,CODENTE,NUMALT,NUMERO_ELEICAO,DATA_ELEICAO,INSCRITOS,VOTANTES,MESES_MANDATO,DATABTE,NUMBTE,SERIEBTE,NUMMAXEFECT,NUMMINEFECT,NUMMAXSUPL,NUMMINSUPL,NUM_H_EFECT,NUM_H_SUPL,NUM_M_EFECT,NUM_M_SUPL,TIPO,ESPECIE,SUB_ESPECIE,NUMERO,ANO,CONTROLO,SERVICO)
-    	VALUES ("{codEntG}", "{codEntE}", "{numAlt}", "{numeroEleicao}", "{dataEleicao}", "{inscritos}","{votantes}","{mesesMandato}","{dataBTE}","{numBTE}","{serieBTE}","{numMaxEfect}","{numMinEfect}","{numMaxSupl}","{numMinSupl}","{numHEfect}","{numHSupl}","{numMEfect}","{numMSupl}","{tipo}", "{especie}", "{subEspecie}", "{numero}", "{ano}", "{controlo}","{servico}");"""
+		to_db.append((
+			linha.get("codEntG"), linha.get("codEntE"), linha.get("numAlt"),
+			linha.get("numeroEleicao"), linha.get("dataEleicao"), inscritos,
+			votantes, linha.get("mesesMandato"), linha.get("dataBTE"),
+			linha.get("numBTE"), linha.get("serieBTE"), linha.get("numMaxEfect"),
+			linha.get("numMinEfect"), linha.get("numMaxSupl"), linha.get("numMinSupl"),
+			linha.get("numHEfect"), linha.get("numHSupl"), linha.get("numMEfect"),
+			linha.get("numMSupl"), linha.get("tipo"), linha.get("especie"),
+			linha.get("subEspecie"), linha.get("numero"), linha.get("ano"),
+			linha.get("controlo"), servico
+		))
 
-		if "servico" not in linha:
-			servico = ""
-		else:
-			servico = linha["servico"]
-
-		if "inscritos" not in linha:
-			inscritos = ""
-		else:
-			inscritos = linha["inscritos"]
-
-		if "votates" not in linha:
-			votantes = ""
-		else:
-			inscritos = linha["votantes"]
-			
-		sql_command = format_str.format(codEntG=linha["codEntG"],codEntE=linha["codEntE"],numAlt=linha["numAlt"],numeroEleicao=linha["numeroEleicao"],dataEleicao=linha["dataEleicao"],inscritos=inscritos,
-			votantes=votantes,mesesMandato=linha["mesesMandato"],dataBTE=linha["dataBTE"],numBTE=linha["numBTE"],serieBTE=linha["serieBTE"],numMaxEfect=linha["numMaxEfect"],
-			numMinEfect=linha["numMinEfect"],numMaxSupl=linha["numMaxSupl"],numMinSupl=linha["numMinSupl"],numHEfect=linha["numHEfect"],numHSupl=linha["numHSupl"],numMEfect=linha["numMEfect"],
-			numMSupl=linha["numMSupl"],tipo=linha["tipo"],especie=linha["especie"],subEspecie=linha["subEspecie"],numero=linha["numero"],ano=linha["ano"],controlo=linha["controlo"],servico=servico)
-		
-		cursor.execute(sql_command)
+	cursor.executemany(query, to_db)
 
 
 def eleicoesCorposGerentes(cursor):
@@ -99,39 +93,28 @@ def getTable_Entidades(ano,cursor):
 	result = getResponse("entidades", ano)
 	final = json.loads(result)
 
+	query = """INSERT INTO TEMP_ENTIDADES1 (CODENTG,CODENTE,NUMALT,SIGLA,NOME_ENTIDADE,CODIGOPOSTAL_ENTIDADE,ID_DISTRITO,DISTRITO_DESCRICAO,ESTADO_ENTIDADE, MORADA_ENTIDADE, LOCAL_MORADA_ENTIDADE, AREA_POSTAL_ENTIDADE, TELEFONE_ENTIDADE, FAX_ENTIDADE)
+    	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+	to_db = []
 	for key in final:
 		linha = final[key]
+		nomeEntidade = linha.get("nomeEntidade", "")
+		moradaEntidade = linha.get("moradaEntidade", "")
+		sigla = linha.get("sigla", "")
+		telefoneEntidade = linha.get("telefoneEntidade", "")
+		faxEntidade = linha.get("faxEntidade", "")
+		distritoDescricao = linha.get("distritoDescricao", "")
 
-		format_str = """INSERT INTO TEMP_ENTIDADES1 (CODENTG,CODENTE,NUMALT,SIGLA,NOME_ENTIDADE,CODIGOPOSTAL_ENTIDADE,ID_DISTRITO,DISTRITO_DESCRICAO,ESTADO_ENTIDADE, MORADA_ENTIDADE, LOCAL_MORADA_ENTIDADE, AREA_POSTAL_ENTIDADE, TELEFONE_ENTIDADE, FAX_ENTIDADE)
-    	VALUES ("{codEntG}", "{codEntE}", "{numAlt}", "{sigla}", "{nomeEntidade}", "{codigoPostalEntidade}","{idDistrito}","{distritoDescricao}","{estadoEntidade}","{moradaEntidade}","{localMoradaEntidade}","{areaPostalEntidade}","{telefoneEntidade}","{faxEntidade}");"""
-		
-		nomeEntidade = linha["nomeEntidade"].replace('"','')
-		moradaEntidade = linha["moradaEntidade"].replace('"','')
+		to_db.append((
+			linha.get("codEntG"), linha.get("codEntE"), linha.get("numAlt"),
+			sigla, nomeEntidade, linha.get("codigoPostalEntidade"),
+			linha.get("idDistrito"), distritoDescricao, linha.get("estadoEntidade"),
+			moradaEntidade, linha.get("localMoradaEntidade"), linha.get("areaPostalEntidade"),
+			telefoneEntidade, faxEntidade
+		))
 
-		if "sigla" not in linha:
-			sigla = ""
-		else:
-			sigla = linha["sigla"]
-
-		if "telefoneEntidade" not in linha:
-			telefoneEntidade = ""
-		else:
-			telefoneEntidade = linha["telefoneEntidade"]
-
-		if "faxEntidade" not in linha:
-			faxEntidade = ""
-		else:
-			faxEntidade = linha["faxEntidade"]
-
-		if "distritoDescricao" not in linha:
-			distritoDescricao = ""
-		else:
-			distritoDescricao = linha["distritoDescricao"]
-
-		sql_command = format_str.format(codEntG=linha["codEntG"],codEntE=linha["codEntE"],numAlt=linha["numAlt"],sigla=sigla,nomeEntidade=nomeEntidade,codigoPostalEntidade=linha["codigoPostalEntidade"],idDistrito=linha["idDistrito"],distritoDescricao=distritoDescricao,
-			estadoEntidade=linha["estadoEntidade"],moradaEntidade=moradaEntidade,localMoradaEntidade=linha["localMoradaEntidade"],areaPostalEntidade=linha["areaPostalEntidade"],telefoneEntidade=telefoneEntidade,faxEntidade=faxEntidade)
-
-		cursor.execute(sql_command)
+	cursor.executemany(query, to_db)
 
 def entidades(cursor):
 	#ano = 0 devolve todos os registos, ?ano tbm devolve todos
@@ -144,42 +127,29 @@ def getTable_Ircts(ano,cursor):
 	result = getResponse("ircts", ano)
 	final = json.loads(result)
 
+	query = """INSERT INTO TEMP_IRCT (NUMERO,NUMERO_SEQUENCIAL,ANO,TIPO_CONVENCAO_CODIGO,TIPO_CONVENCAO_DESCR,TIPO_CONVENCAO_DESCR_LONG,TIPO_CONVENCAO_ORDEM,NATUREZA_CODIGO,NATUREZA_DESCRICAO,NOMECC,AMBITO_GEOGRAFICO_IRCT,AMBITO_GEOGRAFICO_CODE_IRCT,NUMBTE,DATABTE,SERIEBTE,AMBGEG,DATA_EFEITOS,AREA,DIST,CONC,PROV,CODCAE, REVCAE)
+    	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+	to_db = []
 	for key in final:
-		
 		linha = final[key]
+		nomeCC = linha.get("nomeCC", "")
+		dataEfeitos = linha.get("dataEfeitos", "")
+		codCAE = linha.get("codCAE", "")
+		naturezaDescricao = linha.get("naturezaDescricao", "")
+		ambGeg = linha.get("ambGeg", "")
 
-		format_str = """INSERT INTO TEMP_IRCT (NUMERO,NUMERO_SEQUENCIAL,ANO,TIPO_CONVENCAO_CODIGO,TIPO_CONVENCAO_DESCR,TIPO_CONVENCAO_DESCR_LONG,TIPO_CONVENCAO_ORDEM,NATUREZA_CODIGO,NATUREZA_DESCRICAO,NOMECC,AMBITO_GEOGRAFICO_IRCT,AMBITO_GEOGRAFICO_CODE_IRCT,NUMBTE,DATABTE,SERIEBTE,AMBGEG,DATA_EFEITOS,AREA,DIST,CONC,PROV,CODCAE, REVCAE)
-    	VALUES ("{numero}", "{numeroSequencial}", "{ano}", "{tipoConvencaoCodigo}", "{tipoConvencaoDescr}", "{tipoConvencaoDescrLong}","{tipoConvencaoOrdem}","{naturezaCodigo}","{naturezaDescricao}","{nomeCC}","{ambitoGeograficoIRCT}","{ambitoGeograficoCodeIRCT}","{numBTE}","{dataBTE}","{serieBTE}","{ambGeg}","{dataEfeitos}","{area}","{dist}","{conc}","{prov}","{codCAE}","{revCAE}");"""
+		to_db.append((
+			linha.get("numero"), linha.get("numeroSequencial"), linha.get("ano"),
+			linha.get("tipoConvencaoCodigo"), linha.get("tipoConvencaoDescr"), linha.get("tipoConvencaoDescrLong"),
+			linha.get("tipoConvencaoOrdem"), linha.get("naturezaCodigo"), naturezaDescricao,
+			nomeCC, linha.get("ambitoGeograficoIRCT"), linha.get("ambitoGeograficoCodeIRCT"),
+			linha.get("numBTE"), linha.get("dataBTE"), linha.get("serieBTE"),
+			ambGeg, dataEfeitos, linha.get("area"), linha.get("dist"),
+			linha.get("conc"), linha.get("prov"), codCAE, linha.get("revCAE")
+		))
 
-		nomeCC = linha["nomeCC"].replace('"','')
-
-		if "dataEfeitos" not in linha:
-			dataEfeitos = ""
-		else:
-			dataEfeitos = linha["dataEfeitos"]
-
-
-		if "codCAE" not in linha:
-			codCAE = ""
-		else:
-			codCAE = linha["codCAE"]
-
-		if "naturezaDescricao" not in linha:
-			naturezaDescricao = ""
-		else:
-			naturezaDescricao = linha["naturezaDescricao"]
-
-		if "ambGeg" not in linha:
-			ambGeg = ""
-		else:
-			ambGeg = linha["ambGeg"]
-		
-		sql_command = format_str.format(numero=linha["numero"],numeroSequencial=linha["numeroSequencial"],ano=linha["ano"],tipoConvencaoCodigo=linha["tipoConvencaoCodigo"],tipoConvencaoDescr=linha["tipoConvencaoDescr"],tipoConvencaoDescrLong=linha["tipoConvencaoDescrLong"],
-			tipoConvencaoOrdem=linha["tipoConvencaoOrdem"],naturezaCodigo=linha["naturezaCodigo"],naturezaDescricao=naturezaDescricao,nomeCC=nomeCC,ambitoGeograficoIRCT=linha["ambitoGeograficoIRCT"],ambitoGeograficoCodeIRCT=linha["ambitoGeograficoCodeIRCT"],
-			numBTE=linha["numBTE"],dataBTE=linha["dataBTE"],serieBTE=linha["serieBTE"],ambGeg=ambGeg,dataEfeitos=dataEfeitos,
-			area=linha["area"],dist=linha["dist"],conc=linha["conc"],prov=linha["prov"],codCAE=codCAE,revCAE=linha["revCAE"])
-
-		cursor.execute(sql_command)
+	cursor.executemany(query, to_db)
 
 
 
@@ -192,24 +162,23 @@ def getTable_Outorgantes(ano,cursor):
 	result = getResponse("outorgantes", ano)
 	final = json.loads(result)
 
+	query = """INSERT INTO TEMP_OUTORGANTES (NUM,NUMSEQ,ANO,TIPOCONV,CODENTG,CODENTE,NUMALT,SIGLA_ENT_E,NOME_ENT_E)
+    	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+	to_db = []
 	for key in final:
-
 		linha = final[key]
+		nomeEntE = linha.get("nomeEntE", "")
+		siglaEntE = linha.get("siglaEntE", "")
 
-		format_str = """INSERT INTO TEMP_OUTORGANTES (NUM,NUMSEQ,ANO,TIPOCONV,CODENTG,CODENTE,NUMALT,SIGLA_ENT_E,NOME_ENT_E)
-    	VALUES ("{numero}", "{numSeq}", "{ano}", "{tipoConv}", "{CodEntG}", "{CodEntE}","{numAlt}","{siglaEntE}","{nomeEntE}");"""
+		to_db.append((
+			linha.get("numero"), linha.get("numSeq"), linha.get("ano"),
+			linha.get("tipoConv"), linha.get("CodEntG"),
+			linha.get("CondEntE", linha.get("CodEntE")),
+			linha.get("numAlt"), siglaEntE, nomeEntE
+		))
 
-		nomeEntE = linha["nomeEntE"].replace('"','')
-
-		if "siglaEntE" not in linha:
-			siglaEntE = ""
-		else:
-			siglaEntE = linha["siglaEntE"]
-		
-		sql_command = format_str.format(numero=linha["numero"],numSeq=linha["numSeq"],ano=linha["ano"],tipoConv=linha["tipoConv"],CodEntG=linha["CodEntG"],CodEntE=linha["CondEntE"],
-			numAlt=linha["numAlt"],siglaEntE=siglaEntE,nomeEntE=nomeEntE)
-
-		cursor.execute(sql_command)
+	cursor.executemany(query, to_db)
 
 def outorgantes(cursor):
 	for ano in range(1975,datetime.today().year+1):
@@ -220,23 +189,23 @@ def getTable_Processos(ano,cursor):
 	result = getResponse("processos", ano)
 	final = json.loads(result)	
 
+	query = """INSERT INTO TEMP_PROCESSOS1 (TIPO,ESPECIE,SUB_ESPECIE,NUMERO,ANO,CONTROLO,SERVICO,COD_ASSUNTO,ASSUNTO,DESIGNACAO,TITULO,DATA_ABERTURA_PROCESSO)
+    	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+	to_db = []
 	for key in final:
 		linha = final[key]
+		titulo = linha.get("titulo", "")
+		dataAP = linha.get("dataAberturaProcesso", "")
 
-		format_str = """INSERT INTO TEMP_PROCESSOS1 (TIPO,ESPECIE,SUB_ESPECIE,NUMERO,ANO,CONTROLO,SERVICO,COD_ASSUNTO,ASSUNTO,DESIGNACAO,TITULO,DATA_ABERTURA_PROCESSO)
-    	VALUES ("{tipo}", "{especie}", "{subEspecie}", "{numero}", "{ano}", "{controlo}","{servico}","{codAssunto}","{assunto}","{designacao}","{titulo}","{dataAberturaProcesso}");"""
+		to_db.append((
+			linha.get("tipo"), linha.get("especie"), linha.get("subEspecie"),
+			linha.get("numero"), linha.get("ano"), linha.get("controlo"),
+			linha.get("servico", ""), linha.get("codAssunto"), linha.get("assunto"),
+			linha.get("designacao"), titulo, dataAP
+		))
 
-		titulo = linha["titulo"].replace('"','')
-
-		if "dataAberturaProcesso" not in linha:
-			dataAP = ""
-		else:
-			dataAP = linha["dataAberturaProcesso"]
-
-		sql_command = format_str.format(tipo=linha["tipo"],especie=linha["especie"],subEspecie=linha["subEspecie"],numero=linha["numero"],ano=linha["ano"],controlo=linha["controlo"],
-			servico=linha["servico"],codAssunto=linha["codAssunto"],assunto=linha["assunto"],designacao=linha["designacao"],titulo=titulo,dataAberturaProcesso=dataAP)
-
-		cursor.execute(sql_command)
+	cursor.executemany(query, to_db)
 
 
 def processos(cursor):
