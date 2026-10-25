@@ -5,6 +5,7 @@ import base64
 import sqlite3
 import os
 import re
+import time
 from datetime import datetime
 import greves
 
@@ -582,6 +583,8 @@ def listasDirigentes(cursor):
 
 
 def repDatabase():
+	start_time = time.perf_counter()
+	print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Starting database generation...")
 
 	connection = None
 	try:
@@ -1473,6 +1476,11 @@ def repDatabase():
 	connection.close()
 
 	greves.main()
+
+	elapsed = time.perf_counter() - start_time
+	hours, remainder = divmod(int(elapsed), 3600)
+	minutes, seconds = divmod(remainder, 60)
+	print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Database generation finished in {hours:02d}h {minutes:02d}m {seconds:02d}s ({elapsed:.2f} seconds total).")
 
 	return stats
 
