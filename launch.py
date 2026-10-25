@@ -268,7 +268,8 @@ def export():
     excel_writer.sheets["Eleições"].set_column(0, pd_elei.shape[1]-1, 15)
     excel_writer.sheets["Eleições"].autofilter(0, 0, len(elei), pd_elei.shape[1]-1)
 
-    excel_writer.save()
+    # excel_writer.save()
+    excel_writer.close()
     strIO.seek(0)
     return send_file(strIO,
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
