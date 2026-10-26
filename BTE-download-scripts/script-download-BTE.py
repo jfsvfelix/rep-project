@@ -1,6 +1,8 @@
 import io
 import os
+import subprocess
 import urllib.request
+# pyrefly: ignore[missing-import]
 import html_text
 from pdfminer.converter import TextConverter, HTMLConverter
 from pdfminer.pdfinterp import PDFPageInterpreter
@@ -46,11 +48,28 @@ for year in range(1977, 2020):
       extract_text_from_pdf( "../BTE-data/" + filename )
     except: print("Error processing number " + repr(number) + " from year " + repr(year) + "...")
 
-# Compressing the PDF files
-for fich in os.listdir('../BTE-data/'):
-  fich = "../BTE-data/" + fich
-  fich2 = "../BTE-data/" + fich + ".tmp"
-  if fich[-3:]=="pdf": os.system("ps2pdf -dUseFlateCompression=true -dPDFSETTINGS=/screen %s %s" % (fich,fich2))
-  if os.path.isfile(fich2):
-    os.remove(fich)
-    os.rename(fich2, fich)
+# Compressing the PDF files safely
+bte_dir = os.path.normpath("../BTE-data")
+if os.path.isdir(bte_dir):
+    for filename in os.listdir(bte_dir):
+        if filename.lower().endswith(".pdf"):
+            src_file = os.path.join(bte_dir, filename)
+            tmp_file = os.path.join(bte_dir, filename + ".tmp")
+            
+            try:
+                # Arguments are passed directly to the binary without shell evaluation
+                subprocess.run([
+                    "ps2pdf",
+                    "-dUseFlateCompression=true",
+                    "-dPDFSETTINGS=/screen",
+                    src_file,
+                    tmp_file
+                ], check=True)
+                
+                # Replace the original only if compression succeeded
+                if os.path.isfile(tmp_file):
+                    os.replace(tmp_file, src_file)
+            except (subprocess.CalledProcessError, FileNotFoundError) as e:
+                print(f"Error compressing {filename}: {e}")
+                if os.path.isfile(tmp_file):
+                    os.remove(tmp_file)
