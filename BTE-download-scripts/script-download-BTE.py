@@ -24,18 +24,29 @@ def extract_text_from_pdf( pdf_path ):
   file = open(pdf_path.replace('.pdf','.txt'), 'w')
   file.write(text)
   file.close()
-        
+
 def download_bte( year , number ):      
-  filename = "bte" + repr(number) + "_" + repr(year) + ".pdf"
-  download_url = "http://bte.gep.msess.gov.pt/completos/" + repr(year) + "/" + filename
-  response = urllib.request.urlopen(download_url)
-  file = open("../BTE-data/" + filename, 'wb')
-  file.write(response.read())
-  file.close()
+  filename = f"bte{number}_{year}.pdf"
+  # 1. Enforce HTTPS for encrypted, tamper-resistant transport
+  download_url = f"https://bte.gep.msess.gov.pt/completos/{year}/{filename}"
+  # 2. Ensure destination directory exists
+  out_dir = os.path.normpath("../BTE-data")
+  os.makedirs(out_dir, exist_ok=True)
+  out_path = os.path.join(out_dir, filename)
+  # 3. Add standard User-Agent header (prevents anti-bot blocks from government servers)
+  req = urllib.request.Request(
+    download_url,
+    headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+  )
+  # 4. Use 30-second timeout and context managers to guarantee socket cleanup
+  with urllib.request.urlopen(req, timeout=30) as response:
+    with open(out_path, 'wb') as file:
+      file.write(response.read())
   return filename
 
+
 # Downloading data (e.g., from 1977 to 2020)
-for year in range(2019, 2020):
+for year in range(1977, 2020):
   for number in range(1, 49):
     try: download_bte( year , number )
     except: print("Error processing number " + repr(number) + " from year " + repr(year) + "...")
