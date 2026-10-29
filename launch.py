@@ -60,6 +60,31 @@ def regular_update(hour):
 # Create a new flask web server
 app = Flask(__name__)
 
+@app.after_request
+def set_security_headers(response):
+    # 1. Prevent MIME-type sniffing
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    
+    # 2. Prevent clickjacking by denying iframe embedding
+    response.headers['X-Frame-Options'] = 'DENY'
+    
+    # 3. Restrict sensitive referrer data leakage
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    
+    # 4. Disable access to unnecessary browser APIs
+    response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=()'
+    
+    # 5. Content Security Policy tailored for your templates (Bootstrap, Chart.js, Google Analytics)
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com; "
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "connect-src 'self' https://*.google-analytics.com; "
+        "img-src 'self' data:; "
+        "frame-ancestors 'none';"
+    )
+    return response
+
 ROWS_PER_PAGE = 50
 
 # https://stackoverflow.com/questions/517923/what-is-the-best-way-to-remove-accents-normalize-in-a-python-unicode-string#comment62045428_518232
